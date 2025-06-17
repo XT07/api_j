@@ -3,10 +3,10 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const connection = require("./config/connection");
-const UsersRoutes = require('./routes/UsersRoutes');
-const CategoriesRoutes = require('./routes/CategoriesRoutes');
-const ProductsRoutes = require('./routes/ProductsRoutes');
-const OrdersRoutes = require('./routes/OrdersRoutes');
+const CategoriRout = require('./routes/CategoriRout');
+const OrderRout = require('./routes/OrderRout');
+const UserRout = require('./routes/UserRout');
+const ProductRout = require('./routes/ProductRout');
 
 //verificando a conexão com o banco de dados
 connection
@@ -35,10 +35,10 @@ const {
 } = require('./docs/swagger');
 
 app.use('/api-documentation', SwaggerUi.serve, SwaggerUi.setup(SwaggerSpec)); //rota para a documentação da API
-app.use('/api/users', UsersRoutes);
-app.use('/api/categories', CategoriesRoutes);
-app.use('/api/products', ProductsRoutes);
-app.use('/api/orders', OrdersRoutes);
+app.use('/api/categories', CategoriRout);
+app.use('/api/orders', OrderRout);
+app.use('/api/users', UserRout);
+app.use('/api/products', ProductRout);
 
 //iniciando a API
 app.listen(3030, () => {
