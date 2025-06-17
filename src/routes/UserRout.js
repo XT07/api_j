@@ -242,7 +242,7 @@ const midleware = require('../middleware/midleware');
  */
 
 
-router.post('/cadastro', userController.cadastrar);
+router.post('/cadastro', userController.Register);
 router.post('/login', userController.login);
 router.use(midleware);
 router.get('/perfil', UserController.Profile);
