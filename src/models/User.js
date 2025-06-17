@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const connection = require('../config/connection');
+const { connection } = require('../config/connection');
 const Order = require('./Order');
 
 const User = connection.define('User', {
@@ -33,6 +33,6 @@ const User = connection.define('User', {
 });
 
 User.hasMany(Order, { foreignKey: 'userId', as: 'orders' });
-Order.belongsTo(User, { foreignKey: 'UserId', as: 'user' });
+Order.belongsTo(User, { foreignKey: 'userId', as: 'user' }); // Corrigido 'UserId' para 'userId'
 
 module.exports = User;

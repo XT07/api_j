@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const connection = require("./config/connection");
+const { connection } = require("./config/connection");
 const CategoriRout = require('./routes/CategoriRout');
 const OrderRout = require('./routes/OrderRout');
 const UserRout = require('./routes/UserRout');
@@ -30,11 +30,11 @@ const {
 } = require('./models');
 
 const {
-    SwaggerUi,
-    SwaggerSpec
+    swaggerUi,
+    swaggerSpec
 } = require('./docs/swagger');
 
-app.use('/api-documentation', SwaggerUi.serve, SwaggerUi.setup(SwaggerSpec)); //rota para a documentação da API
+app.use('/api-documentation', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/categories', CategoriRout);
 app.use('/api/orders', OrderRout);
 app.use('/api/users', UserRout);

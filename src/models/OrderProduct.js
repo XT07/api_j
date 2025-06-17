@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const connection = require('../config/connection');
+const { connection } = require('../config/connection');
 const Order = require("./Order");
 const Product = require("./Product");
 
@@ -37,14 +37,14 @@ const OrderProduct = connection.define('OrderProduct', {
 });
 
 Order.belongsToMany(Product, {
-  through: PedidoProduto,
+  through: OrderProduct, // Corrigido de PedidoProduto
   foreignKey: 'orderId',
   otherKey: 'productId',
   as: 'products',
 });
 
 Product.belongsToMany(Order, {
-  through: PedidoProduto,
+  through: OrderProduct, // Corrigido de PedidoProduto
   foreignKey: 'productId',
   otherKey: 'orderId',
   as: 'orders',

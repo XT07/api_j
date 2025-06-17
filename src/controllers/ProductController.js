@@ -9,7 +9,7 @@ exports.ListAll = async (_req, res) => {
 exports.SearchById = async (req, res) => {
   const Product = await product.findByPk(req.params.id);
   if (!Product) return res.status(404).json({ message: `Não foi possivel achar o produto` });
-  res.json(produto);
+  res.json(Product); // Corrigido de 'produto' para 'Product'
 };
 
 exports.Create = async (req, res) => {
@@ -34,7 +34,7 @@ exports.Delet = async (req, res) => {
   const Product = await product.findByPk(req.params.id);
   if (!Product) return res.status(404).json({ message: `Não foi possivel achar o produto` });
 
-  const counter = await OrderProduct.count({ where: { productId: product.id } });
+  const counter = await OrderProduct.count({ where: { productId: Product.id } }); // Corrigido de 'product.id' para 'Product.id'
   if (counter > 0) {
     return res.status(409).json({ message: `Não é possivel deletar o produto pois tem pedidos ativos` });
   }

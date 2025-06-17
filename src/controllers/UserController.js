@@ -65,7 +65,7 @@ exports.UpdateProfile = async (req, res) => {
   }
 };
 
-exports.UpdatePass = async (req, res) => {
+exports.UpdatePassword = async (req, res) => { // Renomeado de UpdatePass
   try {
     const { OldPass, NewPass } = req.body;
     const User = await user.findByPk(req.user.id);
@@ -85,7 +85,7 @@ exports.UpdatePass = async (req, res) => {
   }
 };
 
-exports.DeletAcount = async (req, res) => {
+exports.DeletAccount = async (req, res) => { // Renomeado de DeletAcount
   try {
     const User = await user.findByPk(req.user.id);
     if (!User) return res.status(404).json({ message: `Usuário não encontrado` });
