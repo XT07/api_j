@@ -6,118 +6,163 @@ const midleware = require('../middleware/midleware');
 /**
  * @swagger
  * tags:
- *   name: Categories
- *   description: Gerenciamento das categorias
+ * name: Categories
+ * description: API para gerenciamento de categorias de produtos
  */
 
 /**
  * @swagger
  * /api/categories:
- *   get:
- *     summary: Lista as categorias
- *     tags: [Categories]
- *     responses:
- *       200:
- *         description: Lista de categorias
+ * get:
+ * summary: Retorna a lista de todas as categorias
+ * tags: [Categories]
+ * security:
+ * - bearerAuth: []
+ * responses:
+ * 200:
+ * description: Uma lista de categorias.
+ * content:
+ * application/json:
+ * schema:
+ * type: array
+ * items:
+ * $ref: '#/components/schemas/Category'
+ * 401:
+ * description: Não autorizado, token inválido ou não fornecido.
+ * 500:
+ * description: Erro interno do servidor.
+ * post:
+ * summary: Cria uma nova categoria
+ * tags: [Categories]
+ * security:
+ * - bearerAuth: []
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * required:
+ * - name
+ * properties:
+ * name:
+ * type: string
+ * description: Nome da categoria.
+ * example: Eletrônicos
+ * responses:
+ * 201:
+ * description: Categoria criada com sucesso.
+ * content:
+ * application/json:
+ * schema:
+ * $ref: '#/components/schemas/Category'
+ * 401:
+ * description: Não autorizado, token inválido ou não fornecido.
+ * 500:
+ * description: Erro interno do servidor.
  */
 
 /**
  * @swagger
- * /api/categorias/{id}:
- *   get:
- *     summary: Busca categoria por ID
- *     tags: [Categorias]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID da categoria
- *     responses:
- *       200:
- *         description: Categoria encontrada
- *       404:
- *         description: Categoria não encontrada
+ * /api/categories/{id}:
+ * get:
+ * summary: Retorna uma categoria específica pelo ID
+ * tags: [Categories]
+ * security:
+ * - bearerAuth: []
+ * parameters:
+ * - in: path
+ * name: id
+ * schema:
+ * type: integer
+ * required: true
+ * description: ID da categoria.
+ * responses:
+ * 200:
+ * description: Dados da categoria.
+ * content:
+ * application/json:
+ * schema:
+ * $ref: '#/components/schemas/Category'
+ * 401:
+ * description: Não autorizado, token inválido ou não fornecido.
+ * 404:
+ * description: Categoria não encontrada.
+ * 500:
+ * description: Erro interno do servidor.
+ * put:
+ * summary: Atualiza uma categoria existente pelo ID
+ * tags: [Categories]
+ * security:
+ * - bearerAuth: []
+ * parameters:
+ * - in: path
+ * name: id
+ * schema:
+ * type: integer
+ * required: true
+ * description: ID da categoria.
+ * requestBody:
+ * required: true
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * name:
+ * type: string
+ * description: Novo nome da categoria.
+ * example: Eletrodomésticos
+ * responses:
+ * 200:
+ * description: Categoria atualizada com sucesso.
+ * content:
+ * application/json:
+ * schema:
+ * $ref: '#/components/schemas/Category'
+ * 401:
+ * description: Não autorizado, token inválido ou não fornecido.
+ * 404:
+ * description: Categoria não encontrada.
+ * 500:
+ * description: Erro interno do servidor.
+ * delete:
+ * summary: Deleta uma categoria pelo ID
+ * tags: [Categories]
+ * security:
+ * - bearerAuth: []
+ * parameters:
+ * - in: path
+ * name: id
+ * schema:
+ * type: integer
+ * required: true
+ * description: ID da categoria.
+ * responses:
+ * 200:
+ * description: Categoria deletada com sucesso.
+ * content:
+ * application/json:
+ * schema:
+ * type: object
+ * properties:
+ * message:
+ * type: string
+ * example: Categoria deletada :)
+ * 401:
+ * description: Não autorizado, token inválido ou não fornecido.
+ * 404:
+ * description: Categoria não encontrada.
+ * 409:
+ * description: Conflito, a categoria possui produtos vinculados e não pode ser deletada.
+ * 500:
+ * description: Erro interno do servidor.
  */
 
-/**
- * @swagger
- * /api/categorias:
- *   post:
- *     summary: Cria uma nova categoria
- *     tags: [Categorias]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *             required:
- *               - nome
- *     responses:
- *       201:
- *         description: Categoria criada com sucesso
- */
-
-/**
- * @swagger
- * /api/categorias/{id}:
- *   put:
- *     summary: Atualiza uma categoria
- *     tags: [Categorias]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID da categoria
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               nome:
- *                 type: string
- *     responses:
- *       200:
- *         description: Categoria atualizada
- *       404:
- *         description: Categoria não encontrada
- */
-
-/**
- * @swagger
- * /api/categorias/{id}:
- *   delete:
- *     summary: Deleta uma categoria
- *     tags: [Categorias]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID da categoria
- *     responses:
- *       200:
- *         description: Categoria deletada com sucesso
- *       404:
- *         description: Categoria não encontrada
- *       409:
- *         description: "Não é possível deletar: existem produtos vinculados"
- */
-
-router.get('/', authMiddleware, categoriaController.listarTodas);
-router.get('/:id', authMiddleware, categoriaController.buscarPorId);
-router.post('/', authMiddleware, categoriaController.criar);
-router.put('/:id', authMiddleware, categoriaController.atualizar);
-router.delete('/:id', authMiddleware, categoriaController.deletar);
+router.get('/', midleware, CategoriController.ListAll);
+router.get('/:id', midleware, CategoriController.SearchForId);
+router.post('/', midleware, CategoriController.Create);
+router.put('/:id', midleware, CategoriController.Update);
+router.delete('/:id', midleware, CategoriController.Delet);
 
 module.exports = router;
